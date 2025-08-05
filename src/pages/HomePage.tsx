@@ -39,13 +39,13 @@ export default function HomePage() {
     try {
       const existingGames = gameStorage.getAllGames()
       
-      // Check if our specific example games exist by name
+      // Check if our specific example games exist by name and have image fields
       const hasGame1 = existingGames.some(game => game.name === 'Uit balans halen gelijke positie')
-      const hasGame2 = existingGames.some(game => game.name === 'Uit balans halen ongelijke positie')
+      const hasGame2 = existingGames.some(game => game.name === 'Uit balans halen ongelijke positie' && game.imageA)
       
-      // Force clean initialization for now to fix issues
+      // Force clean initialization to add turtle image
       if (!hasGame1 || !hasGame2) {
-        // Clear localStorage to ensure clean state
+        // Clear localStorage to ensure clean state with new image fields
         localStorage.removeItem('stoeispelen_games')
         
         // Create first example game
@@ -75,6 +75,7 @@ export default function HomePage() {
           id: crypto.randomUUID(),
           name: 'Uit balans halen ongelijke positie',
           position: 'A: zit als bokje/turtle op de mat. B: start naast A',
+          imageA: '/images/turtle.jpg',
           learningTask: {
             focus: 'A: zit als bokje/turtle op de mat. Met als doel deze positie te behouden zonder om te vallen of met de buik op de mat te komen.\nB: Heeft als doel A uit balans te halen. Met de buik plat op de mat te duwen of om te duwen. Lukt dit dan heeft B 1 punt en starten ze weer opnieuw in de beginpositie',
             rules: 'Een grip om de nek mag alleen als daar een arm bij zit. Een kanteling op de zijkant of rug is voldoende voor B.'

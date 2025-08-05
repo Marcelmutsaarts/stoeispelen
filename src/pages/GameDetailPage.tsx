@@ -170,15 +170,11 @@ export default function GameDetailPage() {
         <div className="mb-8">
           <button
             onClick={() => navigate('/')}
-            className="mb-4 hover:opacity-80 flex items-center gap-2 transition-opacity"
+            className="mb-6 hover:opacity-80 flex items-center gap-2 transition-opacity"
             style={{color: 'var(--primary-purple)'}}
           >
             ← Terug naar overzicht
           </button>
-          
-          <h1 className="text-3xl font-bold" style={{color: 'var(--text-black)'}}>
-            <EditableField field="name" value={game.name} />
-          </h1>
         </div>
 
         {/* YouTube Video */}
@@ -204,43 +200,101 @@ export default function GameDetailPage() {
           </div>
         )}
 
-        {/* YouTube URL Input */}
-        <div className="mb-8 max-w-2xl mx-auto">
-          <label className="block text-sm font-medium mb-2" style={{color: 'var(--primary-purple-dark)'}}>YouTube URL</label>
-          <EditableField field="youtubeUrl" value={game.youtubeUrl} />
-        </div>
-
-        {/* Two Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Column */}
-          <div className="space-y-6">
-            {/* Positie */}
+        {/* Three Column Layout: Images Left, Content Right */}
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+          {/* Left Column - Position Images */}
+          <div className="xl:col-span-1 space-y-6">
+            {/* Position A Image */}
             <div className="card-purple">
-              <h2 className="text-xl font-semibold mb-4" style={{color: 'var(--text-black)'}}>Positie</h2>
-              <EditableField field="position" value={game.position} />
+              <h3 className="text-lg font-semibold mb-3" style={{color: 'var(--primary-purple-dark)'}}>Positie A</h3>
+              {game.imageA ? (
+                <div className="mb-3">
+                  <img 
+                    src={game.imageA} 
+                    alt="Positie A" 
+                    className="w-full h-48 object-cover rounded-lg border"
+                    style={{borderColor: 'var(--card-border)'}}
+                  />
+                </div>
+              ) : (
+                <div className="w-full h-48 rounded-lg border-2 border-dashed flex items-center justify-center mb-3" style={{borderColor: 'var(--card-border)'}}>
+                  <span className="text-sm" style={{color: 'var(--primary-purple)', opacity: 0.6}}>Geen afbeelding</span>
+                </div>
+              )}
+              <div className="text-xs" style={{color: 'var(--primary-purple-dark)'}}>
+                <EditableField field="imageA" value={game.imageA} />
+              </div>
             </div>
 
-            {/* Leertaak */}
+            {/* Position B Image */}
             <div className="card-purple">
-              <h2 className="text-xl font-semibold mb-4" style={{color: 'var(--text-black)'}}>Leertaak</h2>
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-medium mb-2" style={{color: 'var(--primary-purple-dark)'}}>Aandachtspunten/Doel</h3>
-                  <EditableField field="learningTask.focus" value={game.learningTask.focus} />
+              <h3 className="text-lg font-semibold mb-3" style={{color: 'var(--primary-purple-dark)'}}>Positie B</h3>
+              {game.imageB ? (
+                <div className="mb-3">
+                  <img 
+                    src={game.imageB} 
+                    alt="Positie B" 
+                    className="w-full h-48 object-cover rounded-lg border"
+                    style={{borderColor: 'var(--card-border)'}}
+                  />
                 </div>
-                <div>
-                  <h3 className="font-medium mb-2" style={{color: 'var(--primary-purple-dark)'}}>Regels</h3>
-                  <EditableField field="learningTask.rules" value={game.learningTask.rules} />
+              ) : (
+                <div className="w-full h-48 rounded-lg border-2 border-dashed flex items-center justify-center mb-3" style={{borderColor: 'var(--card-border)'}}>
+                  <span className="text-sm" style={{color: 'var(--primary-purple)', opacity: 0.6}}>Geen afbeelding</span>
                 </div>
+              )}
+              <div className="text-xs" style={{color: 'var(--primary-purple-dark)'}}>
+                <EditableField field="imageB" value={game.imageB} />
               </div>
             </div>
           </div>
 
-          {/* Right Column */}
-          <div className="space-y-6">
-            {/* STROOM */}
-            <div className="card-purple">
-              <h2 className="text-xl font-semibold mb-4" style={{color: 'var(--text-black)'}}>STROOM-acroniem</h2>
+          {/* Right Columns - Game Content */}
+          <div className="xl:col-span-3">
+            {/* Game Title */}
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold" style={{color: 'var(--text-black)'}}>
+                <EditableField field="name" value={game.name} />
+              </h1>
+            </div>
+
+            {/* YouTube URL Input */}
+            <div className="mb-8">
+              <label className="block text-sm font-medium mb-2" style={{color: 'var(--primary-purple-dark)'}}>YouTube URL</label>
+              <EditableField field="youtubeUrl" value={game.youtubeUrl} />
+            </div>
+
+            {/* Two Column Content Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Left Content Column */}
+            <div className="space-y-6">
+              {/* Positie */}
+              <div className="card-purple">
+                <h2 className="text-xl font-semibold mb-4" style={{color: 'var(--text-black)'}}>Positie</h2>
+                <EditableField field="position" value={game.position} />
+              </div>
+
+              {/* Leertaak */}
+              <div className="card-purple">
+                <h2 className="text-xl font-semibold mb-4" style={{color: 'var(--text-black)'}}>Leertaak</h2>
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-medium mb-2" style={{color: 'var(--primary-purple-dark)'}}>Aandachtspunten/Doel</h3>
+                    <EditableField field="learningTask.focus" value={game.learningTask.focus} />
+                  </div>
+                  <div>
+                    <h3 className="font-medium mb-2" style={{color: 'var(--primary-purple-dark)'}}>Regels</h3>
+                    <EditableField field="learningTask.rules" value={game.learningTask.rules} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Content Column */}
+            <div className="space-y-6">
+              {/* STROOM */}
+              <div className="card-purple">
+                <h2 className="text-xl font-semibold mb-4" style={{color: 'var(--text-black)'}}>STROOM-acroniem</h2>
               <div className="space-y-4">
                 <div>
                   <h3 className="font-medium mb-2" style={{color: 'var(--primary-purple-dark)'}}>Spelersaantal</h3>
@@ -269,10 +323,12 @@ export default function GameDetailPage() {
               </div>
             </div>
 
-            {/* Aanwijzingen */}
-            <div className="card-purple">
-              <h2 className="text-xl font-semibold mb-4" style={{color: 'var(--text-black)'}}>Aanwijzingen</h2>
-              <EditableField field="instructions" value={game.instructions} />
+              {/* Aanwijzingen */}
+              <div className="card-purple">
+                <h2 className="text-xl font-semibold mb-4" style={{color: 'var(--text-black)'}}>Aanwijzingen</h2>
+                <EditableField field="instructions" value={game.instructions} />
+              </div>
+            </div>
             </div>
           </div>
         </div>

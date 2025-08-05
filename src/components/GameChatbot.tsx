@@ -107,6 +107,9 @@ Wees vriendelijk, helder en praktisch in je antwoorden.`
     setIsLoading(true)
 
     try {
+      console.log('🚀 Starting chat request...')
+      console.log('🔑 API Key available:', !!import.meta.env.VITE_GEMINI_API_KEY)
+      
       const systemPrompt = createSystemPrompt()
       
       const { sendChatMessage } = await import('../lib/chatService')
@@ -115,6 +118,8 @@ Wees vriendelijk, helder en praktisch in je antwoorden.`
         message: `${systemPrompt}\n\nGebruiker vraagt: ${input}`,
         aiModel: 'smart'
       })
+
+      console.log('📝 Chat response:', data)
 
       if (!data.success) {
         throw new Error(data.error || 'Failed to get response')
@@ -128,10 +133,24 @@ Wees vriendelijk, helder en praktisch in je antwoorden.`
 
       setMessages(prev => [...prev, assistantMessage])
     } catch (error) {
-      console.error('Error sending message:', error)
+      console.error('❌ Chat error details:', error)
+      
+      let errorMessage = 'Sorry, er ging iets mis. Probeer het opnieuw.'
+      
+      if (error instanceof Error) {
+        console.error('❌ Error message:', error.message)
+        if (error.message.includes('API key')) {
+          errorMessage = 'API key niet gevonden. Controleer je environment variables op Vercel.'
+        } else if (error.message.includes('quota')) {
+          errorMessage = 'API quota overschreden. Probeer later opnieuw.'
+        } else if (error.message.includes('network')) {
+          errorMessage = 'Netwerkfout. Controleer je internetverbinding.'
+        }
+      }
+      
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: 'Sorry, er ging iets mis. Probeer het opnieuw.',
+        content: errorMessage,
         timestamp: new Date()
       }])
     } finally {

@@ -1,9 +1,3 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
-
-// Initialize Gemini AI client
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY
-const genAI = new GoogleGenerativeAI(API_KEY || '')
-
 export interface ChatMessage {
   message: string
   aiModel?: 'smart' | 'pro' | 'internet'
@@ -18,35 +12,32 @@ export interface ChatResponse {
 
 export async function sendChatMessage({ message, aiModel = 'smart' }: ChatMessage): Promise<ChatResponse> {
   try {
-    if (!API_KEY) {
-      return {
-        response: '',
-        success: false,
-        error: 'API key niet geconfigureerd. Voeg VITE_GEMINI_API_KEY toe aan je .env.local bestand.'
-      }
-    }
-
-    // Select model - using Gemini 2.5 Flash for better performance
-    const modelName = aiModel === 'pro' ? 'gemini-1.5-pro' :
-                     aiModel === 'smart' ? 'gemini-2.5-flash' :
-                     'gemini-2.5-flash'
+    console.log('🚀 Sending message to serverless API...')
+    console.log('  - Selected model:', aiModel)
     
-    const model = genAI.getGenerativeModel({ model: modelName })
-    
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: message }] }],
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message,
+        aiModel
+      })
     })
 
-    const response = await result.response
-    const text = response.text()
+    const data = await response.json()
+    
+    console.log('📝 API Response:', data)
 
-    return {
-      response: text,
-      success: true
+    if (!response.ok) {
+      throw new Error(data.error || `HTTP error! status: ${response.status}`)
     }
 
+    return data
+
   } catch (error) {
-    console.error('Error calling Gemini API:', error)
+    console.error('❌ Error calling chat API:', error)
     
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     

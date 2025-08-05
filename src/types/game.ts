@@ -3,8 +3,7 @@ export interface Game {
   name: string
   youtubeUrl?: string
   position?: string
-  imageA?: string  // Image URL or path for position A
-  imageB?: string  // Image URL or path for position B
+  positionImage?: string  // Image URL or path for position
   learningTask: {
     focus?: string
     rules?: string

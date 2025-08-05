@@ -202,49 +202,27 @@ export default function GameDetailPage() {
 
         {/* Three Column Layout: Images Left, Content Right */}
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
-          {/* Left Column - Position Images */}
-          <div className="xl:col-span-1 space-y-6">
-            {/* Position A Image */}
+          {/* Left Column - Position Image */}
+          <div className="xl:col-span-1">
             <div className="card-purple">
-              <h3 className="text-lg font-semibold mb-3" style={{color: 'var(--primary-purple-dark)'}}>Positie A</h3>
-              {game.imageA ? (
+              <h3 className="text-lg font-semibold mb-3" style={{color: 'var(--primary-purple-dark)'}}>Positie Afbeelding</h3>
+              {game.positionImage ? (
                 <div className="mb-3">
                   <img 
-                    src={game.imageA} 
-                    alt="Positie A" 
-                    className="w-full h-48 object-cover rounded-lg border"
+                    src={game.positionImage} 
+                    alt="Positie" 
+                    className="w-full h-64 object-cover rounded-lg border"
                     style={{borderColor: 'var(--card-border)'}}
                   />
                 </div>
               ) : (
-                <div className="w-full h-48 rounded-lg border-2 border-dashed flex items-center justify-center mb-3" style={{borderColor: 'var(--card-border)'}}>
+                <div className="w-full h-64 rounded-lg border-2 border-dashed flex items-center justify-center mb-3" style={{borderColor: 'var(--card-border)'}}>
                   <span className="text-sm" style={{color: 'var(--primary-purple)', opacity: 0.6}}>Geen afbeelding</span>
                 </div>
               )}
               <div className="text-xs" style={{color: 'var(--primary-purple-dark)'}}>
-                <EditableField field="imageA" value={game.imageA} />
-              </div>
-            </div>
-
-            {/* Position B Image */}
-            <div className="card-purple">
-              <h3 className="text-lg font-semibold mb-3" style={{color: 'var(--primary-purple-dark)'}}>Positie B</h3>
-              {game.imageB ? (
-                <div className="mb-3">
-                  <img 
-                    src={game.imageB} 
-                    alt="Positie B" 
-                    className="w-full h-48 object-cover rounded-lg border"
-                    style={{borderColor: 'var(--card-border)'}}
-                  />
-                </div>
-              ) : (
-                <div className="w-full h-48 rounded-lg border-2 border-dashed flex items-center justify-center mb-3" style={{borderColor: 'var(--card-border)'}}>
-                  <span className="text-sm" style={{color: 'var(--primary-purple)', opacity: 0.6}}>Geen afbeelding</span>
-                </div>
-              )}
-              <div className="text-xs" style={{color: 'var(--primary-purple-dark)'}}>
-                <EditableField field="imageB" value={game.imageB} />
+                <label className="block mb-1 font-medium">Afbeelding URL:</label>
+                <EditableField field="positionImage" value={game.positionImage} />
               </div>
             </div>
           </div>

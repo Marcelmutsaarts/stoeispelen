@@ -1,12 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Game } from '../types/game'
-import { gameStorage } from '../lib/gameStorage'
+import { gameStorage, ExportData } from '../lib/gameStorage'
 
 export default function HomePage() {
   const [games, setGames] = useState<Game[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredGames, setFilteredGames] = useState<Game[]>([])
+  const [showImportDialog, setShowImportDialog] = useState(false)
+  const [importMode, setImportMode] = useState<'merge' | 'replace'>('replace')
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -145,11 +148,85 @@ export default function HomePage() {
     navigate(`/game/${gameId}`)
   }
 
+  const handleExport = () => {
+    try {
+      gameStorage.downloadExport()
+    } catch (error) {
+      console.error('Export error:', error)
+      alert('Er ging iets mis bij het exporteren. Probeer het opnieuw.')
+    }
+  }
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    try {
+      const text = await file.text()
+      const data: ExportData = JSON.parse(text)
+      
+      // Show import dialog
+      setShowImportDialog(true)
+      
+      // Store data temporarily
+      ;(window as any).tempImportData = data
+    } catch (error) {
+      console.error('Import error:', error)
+      alert('Ongeldig bestand. Zorg dat je een geldig Stoeispelen export bestand selecteert.')
+    }
+    
+    // Reset file input
+    event.target.value = ''
+  }
+
+  const handleImportConfirm = () => {
+    try {
+      const data = (window as any).tempImportData
+      if (!data) return
+      
+      gameStorage.importGames(data, importMode)
+      loadGames() // Reload games
+      setShowImportDialog(false)
+      delete (window as any).tempImportData
+      
+      alert(`Import succesvol! ${data.games.length} games ${importMode === 'merge' ? 'toegevoegd' : 'geïmporteerd'}.`)
+    } catch (error) {
+      console.error('Import error:', error)
+      alert('Er ging iets mis bij het importeren. Controleer het bestand en probeer opnieuw.')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-lavender">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-10">
+          <div className="flex justify-end gap-2 mb-4">
+            <button
+              onClick={handleExport}
+              className="px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm"
+              style={{borderColor: 'var(--card-border)', color: 'var(--primary-purple)'}}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Export
+            </button>
+            <button
+              onClick={handleImportClick}
+              className="px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2 text-sm"
+              style={{borderColor: 'var(--card-border)', color: 'var(--primary-purple)'}}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              Import
+            </button>
+          </div>
           <h1 className="text-5xl font-bold mb-4" style={{color: 'var(--text-black)', fontWeight: 700}}>
             Stoeispelen Bibliotheek
           </h1>
@@ -255,6 +332,77 @@ export default function HomePage() {
                   <div>startscherm te laten verschijnen!</div>
                 </div>
                 <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent" style={{borderTopColor: 'var(--primary-purple-dark)'}}></div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Hidden file input for import */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".json"
+          onChange={handleFileSelect}
+          style={{ display: 'none' }}
+        />
+
+        {/* Import Dialog */}
+        {showImportDialog && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full" style={{border: '1px solid var(--card-border)'}}>
+              <h3 className="text-lg font-semibold mb-4" style={{color: 'var(--text-black)'}}>
+                Games Importeren
+              </h3>
+              <p className="mb-4 text-sm" style={{color: 'var(--text-gray)'}}>
+                Hoe wil je de geïmporteerde games toevoegen?
+              </p>
+              
+              <div className="space-y-3 mb-6">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="importMode"
+                    value="replace"
+                    checked={importMode === 'replace'}
+                    onChange={(e) => setImportMode(e.target.value as 'replace')}
+                    style={{accentColor: 'var(--primary-purple)'}}
+                  />
+                  <div>
+                    <div className="font-medium text-sm" style={{color: 'var(--text-black)'}}>Vervangen</div>
+                    <div className="text-xs" style={{color: 'var(--text-gray)'}}>Alle huidige games vervangen door geïmporteerde games</div>
+                  </div>
+                </label>
+                
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="importMode"
+                    value="merge"
+                    checked={importMode === 'merge'}
+                    onChange={(e) => setImportMode(e.target.value as 'merge')}
+                    style={{accentColor: 'var(--primary-purple)'}}
+                  />
+                  <div>
+                    <div className="font-medium text-sm" style={{color: 'var(--text-black)'}}>Toevoegen</div>
+                    <div className="text-xs" style={{color: 'var(--text-gray)'}}>Nieuwe games toevoegen aan huidige bibliotheek</div>
+                  </div>
+                </label>
+              </div>
+
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => setShowImportDialog(false)}
+                  className="px-4 py-2 border rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                  style={{borderColor: 'var(--card-border)', color: 'var(--text-gray)'}}
+                >
+                  Annuleren
+                </button>
+                <button
+                  onClick={handleImportConfirm}
+                  className="btn-primary text-sm"
+                >
+                  Importeren
+                </button>
               </div>
             </div>
           </div>

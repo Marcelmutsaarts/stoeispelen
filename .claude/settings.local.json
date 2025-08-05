@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(set PORT=3002)",
+      "Bash(set NODE_ENV=development)",
+      "Bash(set PORT=3000)",
+      "Bash(curl:*)",
+      "Bash(npm install)",
+      "Bash(del package-lock.json)",
+      "Bash(rm:*)",
+      "Bash(timeout 8 npm run dev)",
+      "Bash(mv:*)",
+      "Bash(cp:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": []
+  }
+}

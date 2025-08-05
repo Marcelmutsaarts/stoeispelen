@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Purple theme colors and typography */
+:root {
+  --primary-purple: #9C6BFF;
+  --primary-purple-dark: #6B4BFF;
+  --primary-purple-light: #B34BFF;
+  --lavender-bg: #F6F1FF;
+  --card-border: #E4D8FF;
+  --text-black: #000000;
+  --text-gray: #444444;
+  --shadow: rgba(0,0,0,0.08);
+  --gradient: linear-gradient(135deg, #6B4BFF 0%, #B34BFF 100%);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.10);
+}
+
+/* Set Poppins as default font */
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Custom purple theme components */
+@layer components {
+  .btn-primary {
+    @apply px-6 py-3 text-white rounded-lg font-semibold transition-all duration-200;
+    background: var(--gradient);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+  }
+  
+  .card-purple {
+    @apply bg-white rounded-2xl p-6 transition-all duration-200;
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .card-purple:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .bg-lavender {
+    background-color: var(--lavender-bg);
+  }
+  
+  .text-purple {
+    color: var(--primary-purple);
+  }
+  
+  .text-purple-dark {
+    color: var(--primary-purple-dark);
+  }
+  
+  .border-purple {
+    border-color: var(--card-border);
+  }
+}
+
+@layer utilities {
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+}
+
+/* Fix text input issues */
+input[type="text"], textarea {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: normal !important;
+}
+
+/* Ensure proper text flow */
+* {
+  direction: ltr;
+  text-align: left;
+}

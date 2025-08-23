@@ -71,13 +71,6 @@ function GameDetailPage() {
   }
 
   const handleSave = () => {
-    if (isNew) {
-      addGame(game)
-      navigate('/')
-    }
-  }
-
-  const handleSave = () => {
     if (!game.title.trim()) {
       alert('Titel is verplicht om het spel op te slaan')
       return
@@ -116,15 +109,14 @@ function GameDetailPage() {
             </button>
             
             <div className="flex gap-2">
-              {isNew && (
-                <button
-                  onClick={handleSave}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-                >
-                  <Save className="w-4 h-4" />
-                  Opslaan
-                </button>
-              )}
+              <button
+                onClick={handleSave}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              >
+                <Save className="w-4 h-4" />
+                {isNew ? 'Opslaan' : 'Wijzigingen opslaan'}
+              </button>
+              
               {!isNew && (
                 <button
                   onClick={handleDelete}

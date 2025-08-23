@@ -1,6 +1,6 @@
 const defaultGames = [
   {
-    id: "game-1",
+    id: "default-game-001",
     title: "Uit balans halen gelijke positie",
     objective: "Vanuit hurk-positie (op de knieën) is het doel elkaar uit balans te halen. Hierbij moet je zorgen zelf balans te houden zonder te steunen op de mat (met de handen/ellenbogen/hoofd).",
     leftColumn: {
@@ -26,7 +26,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-2",
+    id: "default-game-002",
     title: "Uit balans halen ongelijke positie",
     objective: "Speler B moet speler A proberen uit balans te halen terwijl deze in bokje/turtle positie probeert te blijven zitten.",
     leftColumn: {
@@ -52,7 +52,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-3",
+    id: "default-game-003",
     title: "Butterfly sweep",
     objective: "Speler A probeert vanuit de butterfly guard speler B op de rug te krijgen",
     leftColumn: {
@@ -78,7 +78,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-4",
+    id: "default-game-004",
     title: "Controleren bokje/turtle",
     objective: "Speler B moet zien te voorkomen dat speler A kan opstaan vanuit bokje/turtle",
     leftColumn: {
@@ -104,7 +104,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-5",
+    id: "default-game-005",
     title: "Controleren ligpositie op buik",
     objective: "Speler B moet zien te voorkomen dat Speler A naar een bokje/turtle kan komen.",
     leftColumn: {
@@ -130,7 +130,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-6",
+    id: "default-game-006",
     title: "Controleren ligpositie op rug",
     objective: "Speler B moet zien te voorkomen dat speler A naar de buik draait en tot bokje/turtle komt.",
     leftColumn: {
@@ -156,7 +156,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-7",
+    id: "default-game-007",
     title: "Verdedigen van passeren",
     objective: "Speler A moet voorkomen dat speler B de benen kan passeren.",
     leftColumn: {
@@ -182,7 +182,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-8",
+    id: "default-game-008",
     title: "Verdedigen vanaf de rug",
     objective: "Speler A moet voorkomen dat speler B vanuit side control naar mount komt.",
     leftColumn: {
@@ -208,7 +208,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-9",
+    id: "default-game-009",
     title: "Rugzak verdedigen",
     objective: "Speler A moet voorkomen dat speler B hooks krijgt met de voeten.",
     leftColumn: {
@@ -234,7 +234,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-10",
+    id: "default-game-010",
     title: "Controle verbreken op de rug vanuit side control",
     objective: "Speler A moet proberen de armen weer tussen zichzelf en speler B te krijgen vanuit side control.",
     leftColumn: {
@@ -260,7 +260,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-11",
+    id: "default-game-011",
     title: "Controle verbreken op de rug vanuit mount",
     objective: "Speler A moet de controle van B over de ruimte tussen ellenbogen en knieën aan minimaal één kant verbreken (frame terugwinnen)",
     leftColumn: {
@@ -286,7 +286,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-12",
+    id: "default-game-012",
     title: "Rugzak ontsnappen",
     objective: "Speler B moet proberen uit de backmount te ontsnappen.",
     leftColumn: {
@@ -312,7 +312,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-13",
+    id: "default-game-013",
     title: "Voorbij de voeten",
     objective: "Speler A moet proberen te voorkomen dat speler B voorbij de voeten komt.",
     leftColumn: {
@@ -338,7 +338,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-14",
+    id: "default-game-014",
     title: "Voorbij butterfly komen",
     objective: "Speler A moet voorkomen dat speler B voorbij de benen komt vanuit butterfly guard",
     leftColumn: {
@@ -364,7 +364,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-15",
+    id: "default-game-015",
     title: "Voorbij turtle of guard",
     objective: "Speler A moet zien te voorkomen dat speler B vanuit de voorkant van de turtle bij de heupen van speler A kan komen.",
     leftColumn: {
@@ -390,7 +390,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-16",
+    id: "default-game-016",
     title: "Zinvolle verbinding",
     objective: "Speler A moet proberen om zoveel mogelijk fysiek contact met speler B te maken met zijn ledematen.",
     leftColumn: {
@@ -416,7 +416,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-17",
+    id: "default-game-017",
     title: "Passeer de voeten / guard spel",
     objective: "Speler A moet altijd minimaal 1 voet tussen zichzelf en speler B zien te houden.",
     leftColumn: {
@@ -442,7 +442,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-18",
+    id: "default-game-018",
     title: "Chest to back",
     objective: "Speler A moet voorkomen dat speler B bij zijn rug kan komen en deze kan controleren",
     leftColumn: {
@@ -468,7 +468,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-19",
+    id: "default-game-019",
     title: "Sweepen staande tegenstander",
     objective: "Speler A probeert de balans van speler B te verstoren terwijl hij op de rug ligt en Speler B staat.",
     leftColumn: {
@@ -494,7 +494,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-20",
+    id: "default-game-020",
     title: "Opstaan closed guard",
     objective: "Speler B moet proberen op te staan uit de closed guard van speler A",
     leftColumn: {
@@ -520,7 +520,7 @@ const defaultGames = [
     updatedAt: new Date().toISOString()
   },
   {
-    id: "game-21",
+    id: "default-game-021",
     title: "Opstaan guard op de rug",
     objective: "Speler A moet proberen op te staan vanaf de rug op de grond",
     leftColumn: {

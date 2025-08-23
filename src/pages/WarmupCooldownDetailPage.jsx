@@ -8,7 +8,7 @@ function WarmupCooldownDetailPage() {
   const navigate = useNavigate()
   const { getActivity, addActivity, updateActivity, deleteActivity } = useWarmupCooldownStore()
   
-  const isNew = id === 'new'
+  const isNew = !id || id === 'new'
   const [activity, setActivity] = useState({
     title: '',
     description: '',

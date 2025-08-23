@@ -13,7 +13,7 @@ function GameDetailPage() {
   const navigate = useNavigate()
   const { getGame, addGame, updateGame, deleteGame } = useGameStore()
   
-  const isNew = id === 'new'
+  const isNew = !id || id === 'new'
   const [game, setGame] = useState({
     title: '',
     objective: '',
@@ -71,30 +71,53 @@ function GameDetailPage() {
   }
 
   const handleSave = () => {
+    console.log('handleSave called, isNew:', isNew, 'game:', game)
+    
     if (!game.title.trim()) {
       alert('Titel is verplicht om het spel op te slaan')
       return
     }
 
     if (isNew) {
-      // For new games, create a clean game object without conflicting fields
-      const newGame = {
-        ...game,
-        // Remove any existing id, createdAt, updatedAt - let the store handle these
-        id: undefined,
-        createdAt: undefined,
-        updatedAt: undefined
+      // For new games, let the store handle ID generation
+      const gameToAdd = {
+        title: game.title,
+        objective: game.objective || '',
+        leftColumn: game.leftColumn || {
+          startPosition: '',
+          playerA: '',
+          playerB: '',
+          rules: ''
+        },
+        rightColumn: game.rightColumn || {
+          image: '',
+          modifications: {
+            S: '',
+            T: '',
+            R: '',
+            O: '',
+            O2: '',
+            M: ''
+          },
+          tips: '',
+          youtubeUrl: ''
+        }
       }
-      addGame(newGame)
-      console.log('Adding new game:', newGame)
+      
+      console.log('Calling addGame with:', gameToAdd)
+      const result = addGame(gameToAdd)
+      console.log('addGame result:', result)
+      
+      alert('Nieuw spel succesvol toegevoegd!')
+      
+      // Navigate immediately - the state should be updated synchronously
+      navigate('/')
     } else {
-      updateGame(id, game)
       console.log('Updating existing game:', id, game)
+      updateGame(id, game)
+      alert('Spel succesvol bijgewerkt!')
+      navigate('/')
     }
-    
-    // Show success message and navigate back
-    alert('Spel succesvol opgeslagen!')
-    navigate('/')
   }
 
   const handleDelete = () => {

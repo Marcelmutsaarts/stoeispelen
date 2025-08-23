@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Download, Upload, Dumbbell, Flame, Snowflake } from 'lucide-react'
+import { Plus, Search, Download, Upload, Dumbbell, Flame, Snowflake, RefreshCw } from 'lucide-react'
 import useGameStore from '../store/gameStore'
 import useWarmupCooldownStore from '../store/warmupCooldownStore'
 import GameCard from '../components/HomePage/GameCard'
@@ -10,55 +10,41 @@ import defaultGames from '../data/defaultGames'
 
 function HomePage() {
   const navigate = useNavigate()
-  const { games, importGames, exportGames, addGame, updateGame, removeDuplicates } = useGameStore()
+  const { games, initializeGames, importGames, exportGames, removeDuplicates, resetToDefaults } = useGameStore()
   const { activities: warmupCooldowns } = useWarmupCooldownStore()
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
   const [filteredGames, setFilteredGames] = useState(games)
-  const [activeTab, setActiveTab] = useState('stoeispellen') // 'stoeispellen', 'warmups', 'cooldowns'
+  const [activeTab, setActiveTab] = useState('stoeispellen')
   
 
+  // Initialize games on mount
   useEffect(() => {
-    // Load default games if no games exist OR if new games need to be added
-    const currentVersion = localStorage.getItem('gamesVersion')
-    const targetVersion = '4.4' // Increment this when adding new games
-    
-    if (games.length === 0 && !localStorage.getItem('gamesLoaded')) {
-      // First time loading - add all games
-      defaultGames.forEach(game => addGame(game))
-      localStorage.setItem('gamesLoaded', 'true')
-      localStorage.setItem('gamesVersion', targetVersion)
-    } else if (currentVersion !== targetVersion) {
-      // Version mismatch - replace all games with default games
-      importGames(defaultGames)
-      localStorage.setItem('gamesVersion', targetVersion)
-    }
-  }, [games, addGame, importGames, removeDuplicates])
+    console.log('HomePage mount - initializing games')
+    initializeGames(defaultGames)
+  }, []) // Empty dependency array - only run once
 
-  // Debounce search query to improve performance
+  // Debounce search query
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery)
     }, 300)
-
     return () => clearTimeout(timer)
   }, [searchQuery])
 
+  // Filter games based on search
   useEffect(() => {
-    // Wait for games to load before filtering
     if (!games || !Array.isArray(games) || games.length === 0) {
       setFilteredGames([])
       return
     }
     
-    let result = [...games] // Create a copy to avoid mutations
+    let result = [...games]
     
-    // Apply search filter if there's a query
     if (debouncedSearchQuery && debouncedSearchQuery.trim().length > 0) {
       const lowercaseQuery = debouncedSearchQuery.toLowerCase().trim()
       result = result.filter(game => {
         try {
-          // Search in all text fields with null/undefined safety
           const searchableFields = [
             game?.title || '',
             game?.objective || '',
@@ -82,13 +68,12 @@ function HomePage() {
           
           return searchableText.includes(lowercaseQuery)
         } catch (error) {
-          // If there's any error processing this game, exclude it from results
           return false
         }
       })
     }
     
-    // Sort by position alphabetically with null safety
+    // Sort by position
     result = result.sort((a, b) => {
       const posA = (a?.leftColumn?.startPosition || '').toLowerCase()
       const posB = (b?.leftColumn?.startPosition || '').toLowerCase()
@@ -115,8 +100,8 @@ function HomePage() {
       const reader = new FileReader()
       reader.onload = (e) => {
         try {
-          const games = JSON.parse(e.target.result)
-          importGames(games)
+          const importedGames = JSON.parse(e.target.result)
+          importGames(importedGames)
           alert('Games succesvol geïmporteerd!')
         } catch (error) {
           alert('Fout bij het importeren van games. Controleer het bestand.')
@@ -126,6 +111,19 @@ function HomePage() {
     }
   }
 
+  const handleResetToDefaults = () => {
+    if (window.confirm('Weet je zeker dat je alle games wilt resetten naar de standaard games? Dit verwijdert alle toegevoegde games en wijzigingen!')) {
+      resetToDefaults(defaultGames)
+      alert('Games gereset naar standaard!')
+    }
+  }
+
+  // Check for duplicates
+  const hasDuplicates = () => {
+    const titles = games.map(g => g.title.toLowerCase())
+    const uniqueTitles = new Set(titles)
+    return titles.length !== uniqueTitles.size
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -180,7 +178,6 @@ function HomePage() {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        {/* Show different content based on active tab */}
         {activeTab === 'stoeispellen' ? (
           <>
             {/* Header for Stoeispellen */}
@@ -189,7 +186,7 @@ function HomePage() {
               <p className="text-gray-600">Ecologische task constraint based games voor 1e jaars HAN-ALO studenten</p>
             </div>
 
-            {/* Search and Controls for Stoeispellen */}
+            {/* Search and Controls */}
             <div className="mb-8 space-y-4">
               <div className="flex gap-4 justify-center">
                 <div className="relative flex-1 max-w-md">
@@ -229,15 +226,19 @@ function HomePage() {
                     className="hidden"
                   />
                 </label>
+                <button
+                  onClick={handleResetToDefaults}
+                  className="px-4 py-2 bg-orange-200 text-orange-700 rounded-lg hover:bg-orange-300 transition-colors flex items-center gap-2"
+                  title="Reset alle games naar standaard"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  Reset
+                </button>
               </div>
             </div>
 
             {/* Show cleanup button if there are duplicates */}
-            {(() => {
-              const titles = games.map(g => g.title.toLowerCase())
-              const uniqueTitles = new Set(titles)
-              return titles.length !== uniqueTitles.size
-            })() && <CleanupButton />}
+            {hasDuplicates() && <CleanupButton />}
 
             {/* Games Grid */}
             {filteredGames.length === 0 ? (

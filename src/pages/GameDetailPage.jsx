@@ -77,10 +77,19 @@ function GameDetailPage() {
     }
 
     if (isNew) {
-      // For new games, we don't need to specify an ID - the store will generate one
-      addGame(game)
+      // For new games, create a clean game object without conflicting fields
+      const newGame = {
+        ...game,
+        // Remove any existing id, createdAt, updatedAt - let the store handle these
+        id: undefined,
+        createdAt: undefined,
+        updatedAt: undefined
+      }
+      addGame(newGame)
+      console.log('Adding new game:', newGame)
     } else {
       updateGame(id, game)
+      console.log('Updating existing game:', id, game)
     }
     
     // Show success message and navigate back

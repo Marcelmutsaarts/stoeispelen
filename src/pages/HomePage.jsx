@@ -21,7 +21,7 @@ function HomePage() {
   useEffect(() => {
     // Load default games if no games exist OR if new games need to be added
     const currentVersion = localStorage.getItem('gamesVersion')
-    const targetVersion = '4.3' // Increment this when adding new games
+    const targetVersion = '4.4' // Increment this when adding new games
     
     if (games.length === 0 && !localStorage.getItem('gamesLoaded')) {
       // First time loading - add all games

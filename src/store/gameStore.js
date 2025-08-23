@@ -6,9 +6,20 @@ const useGameStore = create(
     (set, get) => ({
       games: [],
       
-      addGame: (game) => set((state) => ({
-        games: [...state.games, { ...game, id: Date.now().toString(), createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }]
-      })),
+      addGame: (game) => {
+        const newGame = { 
+          ...game, 
+          id: Date.now().toString(), 
+          createdAt: new Date().toISOString(), 
+          updatedAt: new Date().toISOString() 
+        }
+        console.log('Store: Adding game:', newGame)
+        set((state) => {
+          const newState = { games: [...state.games, newGame] }
+          console.log('Store: New games array length:', newState.games.length)
+          return newState
+        })
+      },
       
       updateGame: (id, updates) => set((state) => ({
         games: state.games.map(game => 

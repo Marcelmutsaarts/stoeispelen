@@ -10,7 +10,7 @@ import defaultGames from '../data/defaultGames'
 
 function HomePage() {
   const navigate = useNavigate()
-  const { games, searchGames, importGames, exportGames, addGame, updateGame, removeDuplicates } = useGameStore()
+  const { games, importGames, exportGames, addGame, updateGame, removeDuplicates } = useGameStore()
   const { activities: warmupCooldowns } = useWarmupCooldownStore()
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredGames, setFilteredGames] = useState(games)
@@ -35,7 +35,36 @@ function HomePage() {
   }, [games, addGame, importGames, removeDuplicates])
 
   useEffect(() => {
-    let result = searchQuery ? searchGames(searchQuery) : games
+    let result = games
+    
+    console.log('Search query:', searchQuery, 'Games count:', games.length)
+    
+    // Apply search filter if there's a query
+    if (searchQuery && searchQuery.trim()) {
+      const lowercaseQuery = searchQuery.toLowerCase().trim()
+      result = games.filter(game => {
+        // Search in all text fields
+        const searchableText = [
+          game.title,
+          game.objective,
+          game.leftColumn?.startPosition,
+          game.leftColumn?.playerA,
+          game.leftColumn?.playerB,
+          game.leftColumn?.rules,
+          game.rightColumn?.modifications?.S,
+          game.rightColumn?.modifications?.T,
+          game.rightColumn?.modifications?.R,
+          game.rightColumn?.modifications?.O,
+          game.rightColumn?.modifications?.O2,
+          game.rightColumn?.modifications?.M,
+          game.rightColumn?.tips
+        ].filter(Boolean).join(' ').toLowerCase()
+        
+        return searchableText.includes(lowercaseQuery)
+      })
+    }
+    
+    console.log('Filtered games count:', result.length)
     
     // Sort by position alphabetically
     result = [...result].sort((a, b) => {
@@ -45,7 +74,7 @@ function HomePage() {
     })
     
     setFilteredGames(result)
-  }, [searchQuery, games, searchGames])
+  }, [searchQuery, games])
 
   const handleExport = () => {
     const dataStr = exportGames()

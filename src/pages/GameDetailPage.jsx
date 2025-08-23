@@ -77,6 +77,24 @@ function GameDetailPage() {
     }
   }
 
+  const handleSave = () => {
+    if (!game.title.trim()) {
+      alert('Titel is verplicht om het spel op te slaan')
+      return
+    }
+
+    if (isNew) {
+      // For new games, we don't need to specify an ID - the store will generate one
+      addGame(game)
+    } else {
+      updateGame(id, game)
+    }
+    
+    // Show success message and navigate back
+    alert('Spel succesvol opgeslagen!')
+    navigate('/')
+  }
+
   const handleDelete = () => {
     if (window.confirm('Weet je zeker dat je dit spel wilt verwijderen?')) {
       deleteGame(id)

@@ -8,18 +8,20 @@ function WarmupCooldownList({ filterType = null }) {
   const navigate = useNavigate()
   const { activities, searchActivities, getActivitiesByType } = useWarmupCooldownStore()
   const [searchQuery, setSearchQuery] = useState('')
-  const [typeFilter, setTypeFilter] = useState(filterType || 'all')
   const [filteredActivities, setFilteredActivities] = useState([])
+  
+  // Use filterType prop directly instead of internal state
+  const effectiveTypeFilter = filterType || 'all'
 
   useEffect(() => {
     let result = activities
     
     // Apply search if query exists
     if (searchQuery) {
-      result = searchActivities(searchQuery, typeFilter === 'all' ? null : typeFilter)
-    } else if (typeFilter !== 'all') {
+      result = searchActivities(searchQuery, effectiveTypeFilter === 'all' ? null : effectiveTypeFilter)
+    } else if (effectiveTypeFilter !== 'all') {
       // Apply type filter
-      result = getActivitiesByType(typeFilter)
+      result = getActivitiesByType(effectiveTypeFilter)
     }
     
     // Sort by creation date (newest first)
@@ -28,7 +30,7 @@ function WarmupCooldownList({ filterType = null }) {
     )
     
     setFilteredActivities(result)
-  }, [searchQuery, typeFilter, activities, searchActivities, getActivitiesByType])
+  }, [searchQuery, effectiveTypeFilter, activities, searchActivities, getActivitiesByType])
 
   return (
     <div className="space-y-6">
@@ -48,9 +50,16 @@ function WarmupCooldownList({ filterType = null }) {
           
           <div className="flex gap-2">
             <select
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={effectiveTypeFilter}
+              onChange={(e) => {
+                // Since we're using the parent's filterType, we can't change it here
+                // This dropdown is now read-only when filterType is provided
+                if (!filterType) {
+                  // Only allow changes if no filterType prop is provided
+                }
+              }}
+              disabled={!!filterType}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
               <option value="all">Alle typen</option>
               <option value="warmup">Warming-ups</option>
@@ -70,7 +79,7 @@ function WarmupCooldownList({ filterType = null }) {
       </div>
 
       {/* Results Count */}
-      {searchQuery || typeFilter !== 'all' ? (
+      {searchQuery || effectiveTypeFilter !== 'all' ? (
         <div className="text-sm text-gray-600">
           {filteredActivities.length} {filteredActivities.length === 1 ? 'resultaat' : 'resultaten'} gevonden
         </div>

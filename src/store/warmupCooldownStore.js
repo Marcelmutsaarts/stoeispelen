@@ -5,6 +5,18 @@ const useWarmupCooldownStore = create(
   persist(
     (set, get) => ({
       activities: [],
+      isInitialized: false,
+      
+      initializeActivities: (defaultActivities) => {
+        const state = get()
+        if (!state.isInitialized && state.activities.length === 0) {
+          console.log('Initializing warmup/cooldown activities with defaults')
+          set({
+            activities: defaultActivities,
+            isInitialized: true
+          })
+        }
+      },
       
       addActivity: (activity) => set((state) => ({
         activities: [...state.activities, { 

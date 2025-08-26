@@ -7,21 +7,23 @@ import GameCard from '../components/HomePage/GameCard'
 import WarmupCooldownList from '../components/WarmupCooldown/WarmupCooldownList'
 import CleanupButton from '../components/Common/CleanupButton'
 import defaultGames from '../data/defaultGames'
+import defaultWarmupCooldownActivities from '../data/defaultWarmupCooldown'
 
 function HomePage() {
   const navigate = useNavigate()
   const { games, initializeGames, importGames, exportGames, removeDuplicates, resetToDefaults } = useGameStore()
-  const { activities: warmupCooldowns } = useWarmupCooldownStore()
+  const { activities: warmupCooldowns, initializeActivities } = useWarmupCooldownStore()
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('')
   const [filteredGames, setFilteredGames] = useState(games)
   const [activeTab, setActiveTab] = useState('stoeispellen')
   
 
-  // Initialize games on mount
+  // Initialize games and warmup/cooldown activities on mount
   useEffect(() => {
-    console.log('HomePage mount - initializing games')
+    console.log('HomePage mount - initializing games and activities')
     initializeGames(defaultGames)
+    initializeActivities(defaultWarmupCooldownActivities)
   }, []) // Empty dependency array - only run once
 
   // Debounce search query
